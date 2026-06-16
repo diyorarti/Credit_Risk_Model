@@ -222,6 +222,193 @@ It shows how well the model separates risky and safe borrowers.
 
 ---
 
+## Model Performance
+
+The Logistic Regression PD model was evaluated on the test dataset.
+
+The model predicts whether a borrower is likely to be a **good borrower** or **bad borrower**.
+
+In this project:
+
+```text
+1 = Good borrower
+0 = Bad borrower
+```
+
+The model also produces predicted probabilities, which are later used for scorecard creation and credit decision-making.
+
+### Classification Threshold
+
+For the confusion matrix, a decision threshold of **0.90** was used on the predicted probability of being a good borrower.
+
+This means:
+
+```text
+If predicted probability of being good >= 0.90 → Predict good borrower
+If predicted probability of being good < 0.90  → Predict bad borrower
+```
+
+This is a strict threshold.  
+It helps reduce risky approvals, but it can also reject many actual good borrowers.
+
+---
+
+### Confusion Matrix
+
+The model produced the following confusion matrix on the test data:
+
+| Actual / Predicted | Predicted Bad (0) | Predicted Good (1) |
+|---|---:|---:|
+| Actual Bad (0) | 7,382 | 2,808 |
+| Actual Good (1) | 35,816 | 47,251 |
+
+Interpretation:
+
+- **7,382** bad borrowers were correctly predicted as bad.
+- **2,808** bad borrowers were incorrectly predicted as good.
+- **35,816** good borrowers were incorrectly predicted as bad.
+- **47,251** good borrowers were correctly predicted as good.
+
+---
+
+### Normalized Confusion Matrix
+
+| Actual / Predicted | Predicted Bad (0) | Predicted Good (1) |
+|---|---:|---:|
+| Actual Bad (0) | 7.92% | 3.01% |
+| Actual Good (1) | 38.41% | 50.67% |
+
+This shows that the model is conservative at the selected threshold.  
+It rejects many borrowers as bad, including a large number of actual good borrowers.
+
+---
+
+### Accuracy
+
+Accuracy is calculated as:
+
+```text
+Accuracy = Correct Predictions / Total Predictions
+```
+
+Using the confusion matrix:
+
+```text
+Accuracy = (7,382 + 47,251) / 93,257
+Accuracy ≈ 58.58%
+```
+
+So the model accuracy at the selected threshold is approximately:
+
+```text
+Accuracy = 58.58%
+```
+
+However, in credit risk modeling, accuracy alone is not the most important metric because credit datasets are often imbalanced and threshold-dependent.
+
+---
+
+### AUC
+
+The notebook reports the following AUC value:
+
+```text
+AUC = 0.6466
+```
+
+AUC measures how well the model separates good borrowers from bad borrowers.
+
+General interpretation:
+
+| AUC Value | Meaning |
+|---|---|
+| 0.50 | No predictive power |
+| 0.60 - 0.70 | Weak to moderate separation |
+| 0.70 - 0.80 | Acceptable / good |
+| 0.80+ | Strong |
+
+The model's AUC of around **0.65** shows that the model has **moderate discriminatory power**.
+
+---
+
+### Gini Coefficient
+
+Gini is calculated from AUC:
+
+```text
+Gini = 2 × AUC - 1
+```
+
+The notebook reports:
+
+```text
+Gini = 0.2933
+```
+
+This means the model has some ability to separate good and bad borrowers, but there is still room for improvement.
+
+---
+
+### KS Statistic
+
+The Kolmogorov-Smirnov statistic measures the maximum distance between cumulative good borrowers and cumulative bad borrowers.
+
+The notebook reports:
+
+```text
+KS = 0.2969
+```
+
+This means the maximum separation between cumulative good and bad borrowers is about:
+
+```text
+29.69%
+```
+
+A KS value around 30% can be considered moderate and useful for a learning-level credit risk model.
+
+---
+
+### Performance Summary
+
+| Metric | Value |
+|---|---:|
+| Test observations | 93,257 |
+| Accuracy | 58.58% |
+| AUC | 0.6466 |
+| Gini | 0.2933 |
+| KS Statistic | 0.2969 |
+| Threshold used | 0.90 |
+
+---
+
+### Performance Interpretation
+
+The model shows a moderate ability to separate good and bad borrowers.
+
+The selected threshold of **0.90** makes the model conservative.  
+This means the model tries to avoid approving risky borrowers, but it also rejects many good borrowers.
+
+From a business perspective:
+
+- A stricter threshold may reduce credit losses.
+- A lower threshold may increase loan approvals.
+- The best threshold depends on the bank's risk appetite and business strategy.
+
+This is why credit risk models are not evaluated only by accuracy.  
+AUC, Gini, KS, approval rate, and bad rate are also important for decision-making.
+
+---
+
+### Important Note
+
+This project is a learning and portfolio project.  
+The model performance is not perfect, but it demonstrates the complete workflow of building, validating, and applying a PD model.
+
+In a production-level credit risk system, the model would need stronger validation, monitoring, calibration, and business approval before real-world use.
+
+---
+
 ## Notebook 5: Applying the Model for Decision Making
 
 The final notebook applies the PD model to real credit decision-making.
@@ -315,8 +502,8 @@ A more flexible cut-off increases approvals but may increase credit losses.
 - Pickle
 - Jupyter Notebook
 
-
 ---
+
 
 ## Key Credit Risk Concepts Covered
 
@@ -438,5 +625,4 @@ It shows not only technical skills, but also understanding of how models are use
 Computer Science student based in Poland, focused on Data Analytics, Machine Learning, and Credit Risk Modeling.
 
 GitHub: [https://github.com/diyorarti](https://github.com/diyorarti)  
-LinkedIn : [https://www.linkedin.com/in/diyorarti/](https://www.linkedin.com/in/diyorarti/)
-
+LinkedIn: [https://www.linkedin.com/in/diyorarti/](https://www.linkedin.com/in/diyorarti/)
